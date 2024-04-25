@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.Home.HomeScreenActivity"
+    android:background="@color/primary_color">
+
+
+
+    <LinearLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/menu_btn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/notification_icon"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="end"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="15dp"
+            android:elevation="4dp"
+            android:background="@drawable/home_search_bg"
+            android:paddingHorizontal="8dp">
+
+            <RelativeLayout
+                android:id="@+id/search_layout"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/search_circle_bg">
+
+                <ImageView
+                    android:id="@+id/search_icon"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/group"/>
+
+
+            </RelativeLayout>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/search_layout"
+                android:layout_marginEnd="10dp"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:hint="@string/search_a_friend"
+                android:layout_marginStart="15dp"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:background="@drawable/chat_list_bg"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_layout"
+        android:paddingTop="30dp"
+        tools:listitem="@layout/chat_list_item_layout"
+        android:layout_marginHorizontal="10dp"
+        android:scrollbars="vertical"/>
+
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:paddingVertical="5dp"
+        android:paddingHorizontal="8dp"
+        android:background="@drawable/home_bottom_nav_bg"
+        android:elevation="4dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/home_bootom_nav_item_bg"
+            android:layout_marginEnd="7dp"
+            android:src="@drawable/__icon__call_"
+            android:scaleType="center"/>
+
+        <ImageView
+            android:id="@+id/cameraBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/home_bootom_nav_item_bg"
+            android:layout_marginHorizontal="7dp"
+            android:src="@drawable/__icon__camera_"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/addFriendBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/home_bootom_nav_item_bg"
+            android:layout_marginStart="7dp"
+            android:src="@drawable/icon_add_friend"
+            android:scaleType="center"/>
+
+    </LinearLayout>
+    
+
+
+</RelativeLayout>

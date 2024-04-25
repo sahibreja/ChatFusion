@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary_color">#DDE6E7</color>
+    <color name="secondary_color">#1CBDC8</color>
+    <color name="light_grey">#88B2B5</color>
+    <color name="grey">#D9D9D9</color>
+    <color name="chat_item_desc_color">#807777</color>
+    <color name="online_txt_color">#68888F</color>
+    <color name="chat_act_section_3_bg_color">#F1F1F1</color>
+    <color name="light_gray">#C6D6D6</color>
+    <color name="red">#F44336</color>
+
+</resources>

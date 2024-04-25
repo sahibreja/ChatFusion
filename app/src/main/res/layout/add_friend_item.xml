@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/add_friend_item_bg"
+    android:layout_margin="7dp">
+
+    <LinearLayout
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="7dp"
+        android:paddingHorizontal="10dp"
+        android:layout_margin="7dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImg"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/sahib_reja"
+            android:layout_gravity="start"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/carme"
+                android:text="Sahib Reja"
+                android:textColor="@color/black"
+                android:maxLines="1"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/bio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Everything is Possible in love"
+                android:maxLines="1"
+                android:textSize="15sp"
+                android:fontFamily="@font/carme"
+                android:textColor="@color/chat_item_desc_color"/>
+
+            <Button
+                android:id="@+id/addFriendBtn"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Friend"
+                android:textColor="@android:color/holo_blue_dark"/>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/requestLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/acceptBtn"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Accept"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:layout_marginRight="10dp"/>
+
+                <Button
+                    android:id="@+id/rejectBtn"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="Reject"
+                    android:layout_weight="1"
+                    android:textColor="#F44336"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/openConversation"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/send_svgrepo_com"
+            android:background="@drawable/circle"
+            app:tint="@color/white"
+            android:scaleType="center"
+            android:layout_gravity="center_vertical"
+            />
+
+    </LinearLayout>
+
+</FrameLayout>

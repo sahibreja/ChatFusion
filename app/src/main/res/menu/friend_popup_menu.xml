@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/show_request"
+        android:title="Show Requests"
+
+        />
+    <item
+        android:id="@+id/sent_request"
+        android:title="Show Sent" />
+    <!-- Add more items as needed -->
+</menu>

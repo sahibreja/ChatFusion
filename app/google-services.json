@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "849790555530",
+    "project_id": "flash-chat-9a1bf",
+    "storage_bucket": "flash-chat-9a1bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849790555530:android:edd6a9e0a59ab0ac10e473",
+        "android_client_info": {
+          "package_name": "com.reja.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849790555530-aome3c8menhca0haor8i848ufqoj5l0n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAKcwLopvmtSXJ3iEALEmoq65YG5Q7UO8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849790555530-aome3c8menhca0haor8i848ufqoj5l0n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849790555530:android:51c1db496bb4ecd310e473",
+        "android_client_info": {
+          "package_name": "com.reja.flash_chat.flash_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849790555530-aome3c8menhca0haor8i848ufqoj5l0n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAKcwLopvmtSXJ3iEALEmoq65YG5Q7UO8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849790555530-aome3c8menhca0haor8i848ufqoj5l0n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

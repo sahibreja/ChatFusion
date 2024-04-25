@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="welcome_txt_style">
+        <item name="android:textSize">40sp</item>
+        <item name="android:textColor">@color/secondary_color</item>
+        <item name="android:shadowColor">#40000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowRadius">4</item>
+        <item name="android:fontFamily">@font/itim</item>
+    </style>
+
+    <style name="please_sign_txt_style">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#68888F</item>
+        <item name="android:fontFamily">@font/itim</item>
+    </style>
+
+    <style name="login_txt_style">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">#1CBDC8</item>
+        <item name="android:shadowColor">#40000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowRadius">4</item>
+    </style>
+
+    <style name="login_with_google_txt_style">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">#1CBDC8</item>
+        <item name="android:shadowColor">#40000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowRadius">4</item>
+    </style>
+
+    <style name="signup_txt_style">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#1CBDC8</item>
+        <item name="android:shadowColor">#40000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowRadius">4</item>
+        <item name="android:fontFamily">@font/itim</item>
+    </style>
+
+    <style name="login_edit_text_style">
+        <item name="android:padding">8dp</item>
+        <item name="android:drawablePadding">15dp</item>
+        <item name="android:background">@drawable/login_edit_txt_bg</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:maxHeight">45dp</item>
+    </style>
+
+    <style name="register_btn_style">
+        <item name="android:background">@drawable/register_btn_bg</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/itim</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:shadowColor">#40000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowRadius">4</item>
+    </style>
+
+    <style name="switch_style" parent="android:Widget.Material.CompoundButton.Switch">
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_width">40dp</item>
+
+    </style>
+
+    <style name="popupBgStyle" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@drawable/popup_menu_bg</item>
+    </style>
+</resources>

@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Love Chime</string>
+    <string name="sr_chat">Sr Chat</string>
+    <string name="todo">TODO</string>
+    <string name="welcome_txt">Welcome</string>
+    <string name="please_sign_txt">Please Sign-in to continue</string>
+    <string name="login">Login</string>
+    <string name="enter_email_address">Enter email address</string>
+    <string name="enter_password">Enter password</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="don_t_have_an_account_signup">Don\'t have an account? SignUp</string>
+    <string name="complete_pr">SIGN UP</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="register">Register</string>
+    <string name="search_a_friend">Search a friend</string>
+    <string name="write_a_message">Write a message</string>
+    <string name="mute_notification">Mute Notification</string>
+    <string name="custom_notification">Custom Notification</string>
+    <string name="mutual_friend">Mutual Friend</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="about_me">About Me</string>
+    <string name="search">Search</string>
+    <string name="we_can_t_find_any_user_matching_your_search">We can\'t find any user matching your search</string>
+    <string name="no_result_found">No Result Found</string>
+</resources>
