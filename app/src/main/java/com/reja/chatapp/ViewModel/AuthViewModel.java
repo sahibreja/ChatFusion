@@ -1,6 +1,7 @@
 package com.reja.chatapp.ViewModel;
 
 import android.app.Application;
+import android.net.Uri;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
@@ -22,8 +23,8 @@ public class AuthViewModel extends AndroidViewModel {
         userData = repository.getFirebaseUserMutableLiveData();
         loggedStatus = repository.getUserLoggedMutableLiveData();
     }
-    public void signUp(User user){
-        repository.signUp(user);
+    public void signUp(User user, Uri fileUri){
+        repository.signUp(user,fileUri);
     }
 
     public void logIn(String email , String pass){

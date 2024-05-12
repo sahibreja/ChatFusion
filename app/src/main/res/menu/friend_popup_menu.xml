@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/show_request"
-        android:title="Show Requests"
-
-        />
+        android:title="@string/received_requests" />
     <item
         android:id="@+id/sent_request"
-        android:title="Show Sent" />
+        android:title="@string/sent_requests" />
     <!-- Add more items as needed -->
 </menu>

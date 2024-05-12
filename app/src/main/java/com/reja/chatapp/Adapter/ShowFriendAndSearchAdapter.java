@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.reja.chatapp.Interface.Listener.OnAcceptClickListener;
 import com.reja.chatapp.Interface.Listener.OnAddFriendClickListener;
@@ -60,8 +61,15 @@ public class ShowFriendAndSearchAdapter extends RecyclerView.Adapter<ShowFriendA
         SearchResult result = resultList.get(position);
         String senderId = Objects.requireNonNull(auth.getCurrentUser()).getUid();
         FriendRequest friendRequest = new FriendRequest(senderId, result.getUserId(), "pending");
+        String profileImage = result.getUserProfileImage();
         holder.userName.setText(result.getUserName());
         holder.userBio.setText(result.getUserBio());
+
+        if (profileImage != null && !profileImage.isEmpty()) {
+            Glide.with(context).load(profileImage).into(holder.profileImg);
+        } else {
+            holder.profileImg.setImageResource(R.drawable.account);
+        }
 
         if (result.isFriend()) {
             holder.addFriend.setVisibility(View.GONE);
@@ -130,7 +138,9 @@ public class ShowFriendAndSearchAdapter extends RecyclerView.Adapter<ShowFriendA
             @Override
             public void onClick(View view) {
                 if(result.isFriend()){
-                    context.startActivity(new Intent(context, ChatActivity.class));
+                    Intent intent = new Intent(context, ChatActivity.class);
+                    intent.putExtra("userId",result.getUserId());
+                    context.startActivity(intent);
                 }
             }
         });

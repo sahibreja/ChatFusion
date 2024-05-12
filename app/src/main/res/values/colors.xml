@@ -11,5 +11,7 @@
     <color name="chat_act_section_3_bg_color">#F1F1F1</color>
     <color name="light_gray">#C6D6D6</color>
     <color name="red">#F44336</color>
+    <color name="transparent">#00000000</color>">
+
 
 </resources>

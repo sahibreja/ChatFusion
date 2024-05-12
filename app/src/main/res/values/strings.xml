@@ -25,4 +25,13 @@
     <string name="search">Search</string>
     <string name="we_can_t_find_any_user_matching_your_search">We can\'t find any user matching your search</string>
     <string name="no_result_found">No Result Found</string>
+    <string name="received_requests">Received Requests</string>
+    <string name="sent_requests">Sent Requests</string>
+    <string name="no_messages_yet">No messages, yet</string>
+    <string name="no_messages_in_your_inbox_yet_start_a_new_conversation">No messages in your inbox yet! Start a new conversation</string>
+    <string name="send_files">Send Files</string>
+    <string name="camera">Camera</string>
+    <string name="video">Video</string>
+    <string name="pdf">PDF</string>
+    <string name="write_caption_here">Write Caption Here</string>
 </resources>

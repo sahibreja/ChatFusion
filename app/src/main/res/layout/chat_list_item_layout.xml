@@ -12,9 +12,11 @@
         android:background="@drawable/chat_list_item_bg"
         android:layout_margin="7dp">
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/test_img"
+            android:scaleType="centerCrop"
             android:layout_gravity="center_vertical"/>
 
         <LinearLayout
@@ -22,29 +24,35 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginHorizontal="15dp"
+            android:layout_marginHorizontal="10dp"
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/carme"
+                android:fontFamily="@font/itim"
                 android:text="Jack"
+                android:maxLines="1"
                 android:textColor="@color/black"
                 android:textSize="24sp" />
 
             <TextView
+                android:id="@+id/lastMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="what's up man"
                 android:textSize="15sp"
                 android:fontFamily="@font/carme"
+                android:layout_marginStart="5dp"
+                android:maxLines="1"
                 android:textColor="@color/chat_item_desc_color"/>
             
 
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/unread_msg_view"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"

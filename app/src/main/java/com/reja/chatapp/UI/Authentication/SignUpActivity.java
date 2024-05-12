@@ -1,11 +1,13 @@
 package com.reja.chatapp.UI.Authentication;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -22,6 +24,9 @@ public class SignUpActivity extends AppCompatActivity {
     private AuthViewModel viewModel;
     private ActivitySignUpBinding binding;
     private ProgressDialog progressDialog;
+    private int PICK_IMAGE_REQUEST = 101;
+
+    private Uri imageUri=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,24 @@ public class SignUpActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        binding.profileImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, PICK_IMAGE_REQUEST);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            this.imageUri = data.getData();
+            binding.profileImg.setImageURI(imageUri);
+        }
     }
 
     private boolean checkEntryField(String name,String email,String pass,String confirmPass){
@@ -106,6 +129,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void signUp(User user){
         progressDialog.show();
-        viewModel.signUp(user);
+        viewModel.signUp(user,imageUri);
     }
 }

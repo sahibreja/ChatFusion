@@ -15,14 +15,27 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp"
         android:orientation="vertical">
-        <ImageView
-            android:id="@+id/menu_btn"
-            android:layout_width="20dp"
-            android:layout_height="15dp"
-            android:src="@drawable/__icon__menu_1_"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="end"
-            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+            <ImageView
+                android:id="@+id/backBtn"
+                android:layout_width="20dp"
+                android:layout_height="16dp"
+                android:src="@drawable/_icon_back_arrow"
+                android:contentDescription="@string/todo" />
+
+            <ImageView
+                android:id="@+id/menu_btn"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:src="@drawable/__icon__menu_1_"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/todo"
+                />
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -72,7 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/top_layout"
-        android:paddingTop="20dp"
+        android:paddingTop="15dp"
         tools:listitem="@layout/add_friend_item"
         android:layout_marginHorizontal="10dp"
         android:scrollbars="vertical"/>

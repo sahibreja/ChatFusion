@@ -82,6 +82,13 @@ public class AddFriendActivity extends AppCompatActivity implements OnAddFriendC
                 constructPopupMenu(view);
             }
         });
+
+        binding.backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void init() {
