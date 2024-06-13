@@ -1,32 +1,43 @@
-package com.codewithkael.javawebrtcyoutube.utils;
+package com.reja.chatapp.Utils;
+
 
 public class DataModel {
-    private String target;
-    private String sender;
+    private String senderId;
+    private String senderName;
+    private String receiverId;
     private String data;
     private DataModelType type;
 
-    public DataModel(String target, String sender, String data, DataModelType type) {
-        this.target = target;
-        this.sender = sender;
+    public DataModel(String senderId, String senderName, String receiverId, String data, DataModelType type) {
+        this.senderId = senderId;
+        this.senderName = senderName;
+        this.receiverId = receiverId;
         this.data = data;
         this.type = type;
     }
 
-    public String getTarget() {
-        return target;
+    public String getSenderId() {
+        return senderId;
     }
 
-    public void setTarget(String target) {
-        this.target = target;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 
-    public String getSender() {
-        return sender;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
     }
 
     public String getData() {

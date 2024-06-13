@@ -38,7 +38,7 @@ android {
 
 dependencies {
 
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.activity:activity:1.9.0")
@@ -50,7 +50,7 @@ dependencies {
     //circular image
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
-    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
 
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies
@@ -60,7 +60,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
 
     //Lottie Animation
-    implementation ("com.airbnb.android:lottie:5.0.3")
+    implementation ("com.airbnb.android:lottie:6.4.0")
 
     //Glide library for loading online images into view
     implementation ("com.github.bumptech.glide:glide:4.16.0")
@@ -71,4 +71,21 @@ dependencies {
     //for pdf viewer
     implementation ("com.github.barteksc:android-pdf-viewer:2.8.2")
 
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    //Web rtc
+    implementation ("com.google.code.gson:gson:2.11.0")
+    implementation ("org.webrtc:google-webrtc:1.0.32006")
+
+    implementation ("com.guolindev.permissionx:permissionx:1.7.1")
+
+    implementation("com.google.firebase:firebase-messaging")
+
+    //Media3
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-exoplayer-dash:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
+
+
+    implementation ("com.github.HaarigerHarald:android-youtubeExtractor:v2.1.0")
 }

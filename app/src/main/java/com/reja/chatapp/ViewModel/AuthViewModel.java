@@ -34,6 +34,14 @@ public class AuthViewModel extends AndroidViewModel {
         repository.signOut();
     }
 
+    public void addUserDeviceToken(String userId){
+        repository.addUserDeviceToken(userId);
+    }
+
+    public void removeUserDeviceToken(String userId){
+        repository.removeUserDeviceToken(userId);
+    }
+
     public MutableLiveData<FirebaseUser> getUserData() {
         return userData;
     }

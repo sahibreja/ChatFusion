@@ -11,19 +11,38 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.reja.chatapp.Model.Message;
+import com.reja.chatapp.Model.User;
 import com.reja.chatapp.Repository.ChatRepository;
+import com.reja.chatapp.Repository.RoomRepository;
 
 import java.util.List;
 
 public class ChatViewModel extends AndroidViewModel {
     private ChatRepository chatRepository;
+    private RoomRepository roomRepository;
     public ChatViewModel(@NonNull Application application) {
         super(application);
         chatRepository = new ChatRepository(application);
+        roomRepository = new RoomRepository(application);
+
+    }
+    public MutableLiveData<List<Message>> getListOfMessageLiveData(){
+        return chatRepository.getListOfMessageLiveData();
     }
 
     public MutableLiveData<List<Message>> getListOfMessage(String senderId,String receiverId){
          return chatRepository.getListOfMessages(senderId,receiverId);
+    }
+
+    public void loadInitialMessages(String senderId, String receiverId, int limit){
+         chatRepository.loadInitialMessages(senderId,receiverId,limit);
+    }
+
+    public void loadOlderMessages(String senderId, String receiverId, long oldestMessageTimestamp, int limit){
+        chatRepository.loadOlderMessages(senderId,receiverId,oldestMessageTimestamp,limit);
+    }
+    public void loadNewerMessages(String senderId, String receiverId, long newestMessageTimestamp, int limit){
+         chatRepository.loadNewerMessages(senderId,receiverId,newestMessageTimestamp,limit);
     }
 
     public void sendTextMessage(Message message,boolean isChattingWithMe){
@@ -78,5 +97,22 @@ public class ChatViewModel extends AndroidViewModel {
 
     public MutableLiveData<String> getUserprofilePicture(String receiverId){
         return chatRepository.getUserprofilePicture(receiverId);
+    }
+
+    public LiveData<String> getReceiverDeviceToken(String receiverId){
+        return chatRepository.getReceiverDeviceToken(receiverId);
+    }
+
+    public void joinRoom(String userId, String userName, String userProfilePicture, String roomId){
+        roomRepository.joinRoom(userId,userName,userProfilePicture,roomId);
+
+    }
+
+    public MutableLiveData<User> getUserDetails(){
+        return roomRepository.getUserDetails();
+    }
+
+    public MutableLiveData<String> getUserActionLiveData(){
+        return roomRepository.getUserActionLiveData();
     }
 }

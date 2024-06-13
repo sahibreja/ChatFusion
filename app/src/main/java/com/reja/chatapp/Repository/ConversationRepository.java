@@ -1,7 +1,8 @@
 package com.reja.chatapp.Repository;
 
 import android.app.Application;
-import android.widget.Toast;
+import android.os.Handler;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -13,7 +14,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.reja.chatapp.Interface.CallBack.FriendCheckCallBack;
+import com.reja.chatapp.Interface.CallBack.FriendRequestReceivedCallback;
+import com.reja.chatapp.Interface.CallBack.FriendRequestSentCallBack;
 import com.reja.chatapp.Model.Conversation;
+import com.reja.chatapp.Model.Message;
 import com.reja.chatapp.Model.SearchResult;
 
 import java.util.ArrayList;
@@ -21,105 +26,164 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConversationRepository {
-    private Application application;
-    private FirebaseAuth auth;
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
-    private MutableLiveData<List<Conversation>> mutableListOfChatsLiveData;
+    private final Application application;
+    private final FirebaseAuth auth;
+    private final FirebaseDatabase firebaseDatabase;
+    private final DatabaseReference databaseReference;
+    private final MutableLiveData<List<Conversation>> mutableListOfChatsLiveData;
 
     public ConversationRepository(Application application) {
         this.application = application;
         auth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
-
-
         mutableListOfChatsLiveData = new MutableLiveData<>();
     }
-
-    public MutableLiveData<List<Conversation>> getAllConversation(String userId) {
+    public MutableLiveData<List<Conversation>> getMutableListOfChatsLiveData() {
+        return mutableListOfChatsLiveData;
+    }
+    public void getAllConversation(String userId) {
         DatabaseReference userRef = firebaseDatabase.getReference().child("Users");
         Query convRef = firebaseDatabase.getReference().child("Conversations").child(userId);
-
-        MutableLiveData<List<Conversation>> mutableListOfChatsLiveData = new MutableLiveData<>();
         CompletableFuture<List<Conversation>> futureList = new CompletableFuture<>();
         List<CompletableFuture<Void>> futures = new ArrayList<>();
 
         convRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Conversation> conversationList = new ArrayList<>(); // Use LinkedList for efficiency
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Conversation conversation = dataSnapshot.getValue(Conversation.class);
-                    String receiverId = dataSnapshot.getKey();
-                    assert conversation != null;
-                    conversation.setConversationId(receiverId);
-                    conversation.setSenderId(userId);
-                    conversation.setRecipientId(receiverId);
-                    CompletableFuture<Void> userLoadFuture = new CompletableFuture<>();
-                    userRef.child(receiverId).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot userSnapshot) {
-                            String userName = userSnapshot.child("userName").getValue(String.class);
-                            String userProfilePicture = userSnapshot.child("userProfilePicture").getValue(String.class);
-                            conversation.setRecipientName(userName);
-                            conversation.setRecipientProfilePicture(userProfilePicture);
-                            //Toast.makeText(application, "Check", Toast.LENGTH_SHORT).show();
-                             // Add conversation after updating data
-                            userLoadFuture.complete(null);
-                        }
+                List<Conversation> conversationList = new ArrayList<>();
+                futures.clear();
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            // Handle user data fetch error (propagate or update LiveData)
-                        }
-                    });
-                    futures.add(userLoadFuture);
-                    conversationList.add(conversation);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String receiverId = dataSnapshot.getKey();
+                    Conversation conversation = dataSnapshot.getValue(Conversation.class);
+                    if (conversation != null) {
+                        conversation.setConversationId(receiverId);
+                        conversation.setSenderId(userId);
+                        conversation.setRecipientId(receiverId);
+
+                        CompletableFuture<Void> userLoadFuture = new CompletableFuture<>();
+
+                        userRef.child(receiverId).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                                String userName = userSnapshot.child("userName").getValue(String.class);
+                                String userProfilePicture = userSnapshot.child("userProfilePicture").getValue(String.class);
+                                conversation.setRecipientName(userName);
+                                conversation.setRecipientProfilePicture(userProfilePicture);
+                                conversationList.add(conversation);
+                                userLoadFuture.complete(null);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                userLoadFuture.completeExceptionally(error.toException());
+                            }
+                        });
+
+                        futures.add(userLoadFuture);
+                    }
                 }
 
 
-                CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-                allFutures.thenAccept(ignore -> {
+                CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenAccept(v -> {
                     Collections.sort(conversationList, (conv1, conv2) ->
                             Long.compare(conv2.getLastMessage().getSendTimeStamp(), conv1.getLastMessage().getSendTimeStamp()));
-
-                    // Update your MutableLiveData with the sorted list
-                    mutableListOfChatsLiveData.setValue(conversationList);
+                    mutableListOfChatsLiveData.postValue(conversationList);
+                }).exceptionally(ex -> {
+                    Log.e("getAllConversation", "Error loading conversations", ex);
+                    return null;
                 });
-
-                // Sort the conversations by lastMessage timestamp
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle conversation retrieval error (propagate or update LiveData)
-                futureList.completeExceptionally(error.toException());
+                Log.e("getAllConversation", "Error retrieving conversations", error.toException());
             }
         });
-        futureList.thenAccept(mutableListOfChatsLiveData::setValue);
+        futureList.thenAccept(mutableListOfChatsLiveData::setValue).exceptionally(ex -> {
+            // Log any exceptions
+            Log.e("getSentRequestList", "Error posting LiveData", ex);
+            return null;
+        });
+    }
+    public void getConversationsByUserName(String userId, String queryUserName) {
+        DatabaseReference userRef = firebaseDatabase.getReference().child("Users");
+        Query convRef = firebaseDatabase.getReference().child("Conversations").child(userId);
 
+        convRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Conversation> conversationList = new ArrayList<>();
+                List<CompletableFuture<Void>> futures = new ArrayList<>();
+                Log.d("Conversation size", String.valueOf(snapshot.getChildrenCount()));
 
-        return mutableListOfChatsLiveData;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String receiverId = dataSnapshot.getKey();
+                    Conversation conversation = dataSnapshot.getValue(Conversation.class);
+                    if (conversation != null) {
+                        conversation.setConversationId(receiverId);
+                        conversation.setSenderId(userId);
+                        conversation.setRecipientId(receiverId);
+
+                        CompletableFuture<Void> userLoadFuture = new CompletableFuture<>();
+
+                        userRef.child(receiverId).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                                String userName = userSnapshot.child("userName").getValue(String.class);
+                                String userProfilePicture = userSnapshot.child("userProfilePicture").getValue(String.class);
+                                conversation.setRecipientName(userName);
+                                conversation.setRecipientProfilePicture(userProfilePicture);
+                                if (userName != null && userName.toLowerCase().startsWith(queryUserName.toLowerCase())) {
+                                    conversationList.add(conversation);
+                                }
+                                userLoadFuture.complete(null);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                userLoadFuture.completeExceptionally(error.toException());
+                            }
+                        });
+
+                        futures.add(userLoadFuture);
+                    }
+                }
+
+                CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenAccept(v -> {
+                    Collections.sort(conversationList, (conv1, conv2) ->
+                            Long.compare(conv2.getLastMessage().getSendTimeStamp(), conv1.getLastMessage().getSendTimeStamp()));
+                    mutableListOfChatsLiveData.postValue(conversationList);
+                }).exceptionally(ex -> {
+                    Log.e("getConversationsByUserName", "Error loading conversations", ex);
+                    return null;
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("getConversationsByUserName", "Error retrieving conversations", error.toException());
+            }
+        });
     }
 
-    public void setOnlineStatus(String userId,boolean status){
+    public void setOnlineStatus(String userId, boolean status) {
         DatabaseReference userRef = firebaseDatabase.getReference().child("Users").child(userId).child("status");
-        if(status){
-            userRef.setValue(true);
-        }else{
+        if (status) {
+            new Handler().postDelayed(() -> userRef.setValue(status), 1000);
+        } else {
             userRef.removeValue();
         }
-
     }
 
-    public MutableLiveData<String> getUserName (){
+    public MutableLiveData<String> getUserName() {
         MutableLiveData<String> stringMutableLiveData = new MutableLiveData<>();
         DatabaseReference userRef = firebaseDatabase.getReference().child("Users").child(Objects.requireNonNull(auth.getCurrentUser()).getUid());
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String userName = snapshot.child("userName").getValue(String.class);
@@ -128,13 +192,10 @@ public class ConversationRepository {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                // Handle error
             }
         });
 
         return stringMutableLiveData;
-
     }
-
-
 }

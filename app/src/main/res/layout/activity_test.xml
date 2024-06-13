@@ -1,10 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TestActivity">
+    tools:context=".TestActivity"
+    android:background="#2A2A2B">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/section_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_margin="10dp"
+            tools:ignore="UselessParent">
+
+            <androidx.media3.ui.PlayerView
+                android:overScrollMode="never"
+                android:layout_marginVertical="15dp"
+                android:id="@+id/player_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:show_buffering="when_playing"
+                app:show_shuffle_button="true"
+                app:show_subtitle_button="true"
+                android:layout_gravity="center"
+                android:background="@drawable/tv_frame"
+                android:padding="8dp"
+                app:resize_mode="fill"/>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/section_2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/section_1"
+        android:layout_marginTop="10dp"
+        android:elevation="4dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/section_4"
+            android:layout_marginBottom="7dp"
+            tools:listitem="@layout/outgoing_room_txt_msg_layout"
+            android:scrollbars="vertical"/>
+
+        <LinearLayout
+            android:id="@+id/section_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:elevation="2dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="7dp"
+            android:background="#2A2A2B">
+
+            <RelativeLayout
+                android:id="@+id/attachmentBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/circle_click">
+                <ImageView
+                    android:layout_centerInParent="true"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@string/todo"
+                    android:rotation="45"
+                    android:src="@drawable/baseline_attach_file_24" />
+            </RelativeLayout>
+
+
+            <EditText
+                android:id="@+id/txt_edit_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                android:hint="@string/write_a_message"
+                android:maxHeight="60dp"
+                android:maxLines="5"
+                android:minHeight="30dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
+                android:textSize="14sp"
+                tools:ignore="RtlSymmetry"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/chat_section_4_bg"/>
+
+
+
+            <RelativeLayout
+                android:id="@+id/sendBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/chat_send_btn_bg">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_centerInParent="true"
+                    app:tint="@color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/send_svgrepo_com"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.Home.AddFriendActivity"
+    tools:context=".UI.Home.AddFriend.AddFriendActivity"
     android:background="@color/primary_color">
 
     <LinearLayout
@@ -19,28 +19,55 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/backBtn"
-                android:layout_width="20dp"
-                android:layout_height="16dp"
-                android:src="@drawable/_icon_back_arrow"
-                android:contentDescription="@string/todo" />
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/circle_click">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/_icon_back_arrow"
+                    android:contentDescription="@string/todo"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/menu_btn"
-                android:layout_width="20dp"
-                android:layout_height="15dp"
-                android:src="@drawable/__icon__menu_1_"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
-                android:contentDescription="@string/todo"
-                />
+                android:background="@drawable/circle_click">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/__icon__menu_1_"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/todo"
+                    />
+                <androidx.cardview.widget.CardView
+                    android:visibility="gone"
+                    android:id="@+id/notificationIndicator"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@color/white"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="5dp"
+                    app:cardBackgroundColor="@color/red"/>
+            </RelativeLayout>
+
+
+
         </RelativeLayout>
 
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:elevation="4dp"
             android:background="@drawable/home_search_bg"
             android:paddingHorizontal="8dp">

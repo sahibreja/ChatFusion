@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -119,6 +120,30 @@ public class AuthenticationRepository {
         });
 
 
+    }
+
+    public void addUserDeviceToken(String userId){
+        DatabaseReference userRef = firebaseDatabase.getReference()
+                .child("Users")
+                .child(userId)
+                .child("userDeviceToken");
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if(task.isSuccessful()){
+                    String token = task.getResult();
+                    userRef.setValue(token);
+                }
+            }
+        });
+    }
+
+    public void removeUserDeviceToken(String userId){
+        DatabaseReference userRef = firebaseDatabase.getReference()
+                .child("Users")
+                .child(userId)
+                .child("userDeviceToken");
+        userRef.removeValue();
     }
 
     private void addDataInFirebaseDatabase(User user){

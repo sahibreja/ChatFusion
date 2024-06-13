@@ -10,7 +10,10 @@ public class User {
     private String userEmail;
     private String userPassword;
     private String userProfilePicture;
+    private String userBio;
+    private String userDeviceToken;
     private List<Friend> friends;
+
     private List<FriendRequest> friendRequest;
 
     public User() {
@@ -87,5 +90,21 @@ public class User {
 
     public void setLowerCaseUserName(String lowerCaseUserName) {
         this.lowerCaseUserName = lowerCaseUserName;
+    }
+
+    public String getUserDeviceToken() {
+        return userDeviceToken;
+    }
+
+    public void setUserDeviceToken(String userDeviceToken) {
+        this.userDeviceToken = userDeviceToken;
+    }
+
+    public String getUserBio() {
+        return userBio;
+    }
+
+    public void setUserBio(String userBio) {
+        this.userBio = userBio;
     }
 }

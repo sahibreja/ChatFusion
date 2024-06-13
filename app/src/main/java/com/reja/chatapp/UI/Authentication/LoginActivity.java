@@ -10,17 +10,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.reja.chatapp.MainActivity;
 import com.reja.chatapp.R;
 import com.reja.chatapp.UI.Home.HomeScreenActivity;
 import com.reja.chatapp.ViewModel.AuthViewModel;
 import com.reja.chatapp.databinding.ActivityLoginBinding;
 
+import java.util.Objects;
+
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
     private AuthViewModel viewModel;
     private ProgressDialog progressDialog;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
+                    String uid = Objects.requireNonNull(auth.getCurrentUser()).getUid();
+                    viewModel.addUserDeviceToken(uid);
                     startActivity(new Intent(LoginActivity.this, HomeScreenActivity.class));
                     finish();
                 }
@@ -93,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Please wait .. \nWe are taking you to the World of Love");
         progressDialog.setCancelable(false);
         progressDialog.setInverseBackgroundForced(false);
+        auth = FirebaseAuth.getInstance();
 
     }
 

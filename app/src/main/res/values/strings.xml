@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Love Chime</string>
-    <string name="sr_chat">Sr Chat</string>
+    <string name="app_name">ChatFusion</string>
+    <string name="sr_chat">ChatFusion</string>
     <string name="todo">TODO</string>
     <string name="welcome_txt">Welcome</string>
     <string name="please_sign_txt">Please Sign-in to continue</string>
@@ -15,7 +15,7 @@
     <string name="confirm_password">Confirm password</string>
     <string name="register">Register</string>
     <string name="search_a_friend">Search a friend</string>
-    <string name="write_a_message">Write a message</string>
+    <string name="write_a_message"><font size="14">Write a message</font></string>
     <string name="mute_notification">Mute Notification</string>
     <string name="custom_notification">Custom Notification</string>
     <string name="mutual_friend">Mutual Friend</string>
@@ -34,4 +34,16 @@
     <string name="video">Video</string>
     <string name="pdf">PDF</string>
     <string name="write_caption_here">Write Caption Here</string>
+    <string name="loading">Loading...</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="add_random">Add Random</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_user_title">No Users Available to Send Requests!</string>
+    <string name="no_user_description">YCurrently, there are no users available to send friend requests. Please check back later or try refreshing your feed to see if new users have joined. In the meantime, you can update your profile or explore other features of the app.</string>
+    <string name="full_screen">Full Screen</string>
+    <string name="send">Send</string>
+    <string name="get_room_id">Get Room Id</string>
 </resources>

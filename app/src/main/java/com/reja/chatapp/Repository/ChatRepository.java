@@ -2,8 +2,11 @@ package com.reja.chatapp.Repository;
 
 import android.app.Application;
 import android.net.Uri;
+import android.os.Handler;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,15 +18,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.reja.chatapp.Interface.CallBack.ConvoCheckCallBack;
 import com.reja.chatapp.Model.Message;
 import com.reja.chatapp.Model.MessageType;
-import com.reja.chatapp.Model.User;
+import com.reja.chatapp.Model.MutualFriend;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +41,7 @@ public class ChatRepository {
     private DatabaseReference databaseReference;
     private String userId;
 
+
     private MutableLiveData<List<Message>> mutableListOfMessageLiveData;
 
     public ChatRepository(Application application) {
@@ -45,7 +51,10 @@ public class ChatRepository {
         userId = Objects.requireNonNull(auth.getCurrentUser()).getUid();
         databaseReference = firebaseDatabase.getReference();
         mutableListOfMessageLiveData = new MutableLiveData<>();
+    }
 
+    public MutableLiveData<List<Message>> getListOfMessageLiveData() {
+        return mutableListOfMessageLiveData;
     }
 
     public MutableLiveData<List<Message>> getListOfMessages(String senderId,String receiverId){
@@ -71,8 +80,8 @@ public class ChatRepository {
 
     }
 
-    public MutableLiveData<List<Message>> getInitialMessages(String senderId, String receiverId, int limit) {
-        MutableLiveData<List<Message>> messagesLiveData = new MutableLiveData<>();
+    public void loadInitialMessages(String senderId, String receiverId, int limit) {
+
         Query messageRef = databaseReference
                 .child("Conversations")
                 .child(senderId)
@@ -81,7 +90,7 @@ public class ChatRepository {
                 .orderByChild("timestamp")
                 .limitToLast(limit);
 
-        messageRef.addValueEventListener(new ValueEventListener() {
+        messageRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Message> initialMessages = new ArrayList<>();
@@ -89,7 +98,7 @@ public class ChatRepository {
                     Message message = dataSnapshot.getValue(Message.class);
                     initialMessages.add(message);
                 }
-                messagesLiveData.setValue(initialMessages);
+                mutableListOfMessageLiveData.setValue(initialMessages);
             }
 
             @Override
@@ -98,11 +107,10 @@ public class ChatRepository {
             }
         });
 
-        return messagesLiveData;
+
     }
 
-    public MutableLiveData<List<Message>> loadOlderMessages(String senderId, String receiverId, long oldestMessageTimestamp, int limit) {
-        MutableLiveData<List<Message>> messagesLiveData = new MutableLiveData<>();
+    public void loadOlderMessages(String senderId, String receiverId, long oldestMessageTimestamp, int limit) {
         Query messageRef = databaseReference
                 .child("Conversations")
                 .child(senderId)
@@ -120,7 +128,8 @@ public class ChatRepository {
                     Message message = dataSnapshot.getValue(Message.class);
                     olderMessages.add(message);
                 }
-                messagesLiveData.setValue(olderMessages);
+                //Collections.reverse(olderMessages);
+                mutableListOfMessageLiveData.setValue(olderMessages);
             }
 
             @Override
@@ -129,19 +138,18 @@ public class ChatRepository {
             }
         });
 
-        return messagesLiveData;
     }
 
-    public MutableLiveData<List<Message>> getMoreMessages(String senderId, String receiverId, long oldestMessageTimestamp, int limit) {
-        MutableLiveData<List<Message>> messagesLiveData = new MutableLiveData<>();
+    public void loadNewerMessages(String senderId, String receiverId, long newestMessageTimestamp, int limit) {
+
         Query messageRef = databaseReference
                 .child("Conversations")
                 .child(senderId)
                 .child(receiverId)
                 .child("Messages")
                 .orderByChild("timestamp")
-                .endAt(oldestMessageTimestamp - 1)
-                .limitToLast(limit);
+                .startAt(newestMessageTimestamp + 1)
+                .limitToFirst(limit);
 
         messageRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -151,7 +159,7 @@ public class ChatRepository {
                     Message message = dataSnapshot.getValue(Message.class);
                     moreMessages.add(message);
                 }
-                messagesLiveData.setValue(moreMessages);
+                mutableListOfMessageLiveData.setValue(moreMessages);
             }
 
             @Override
@@ -160,8 +168,8 @@ public class ChatRepository {
             }
         });
 
-        return messagesLiveData;
     }
+
 
     public void sendTextMessage(Message message,boolean isChattingWithMe) {
         DatabaseReference conversationRef = databaseReference.child("Conversations");
@@ -239,11 +247,18 @@ public class ChatRepository {
     }
 
     public void deleteMessage(Message message,Message secondLastMessage,boolean isLastMessage){
+        String senderId = userId;
+        String receiverId = "";
+        if(senderId.equals(message.getSenderId())){
+            receiverId = message.getRecipientId();
+        }else{
+            receiverId = message.getSenderId();
+        }
 
         DatabaseReference senderRef = firebaseDatabase.getReference()
                 .child("Conversations")
-                .child(message.getSenderId())
-                .child(message.getRecipientId())
+                .child(senderId)
+                .child(receiverId)
                 .child("Messages").child(message.getMessageId());
 
         DatabaseReference receiverRef = firebaseDatabase.getReference()
@@ -255,7 +270,7 @@ public class ChatRepository {
 
 
         senderRef.removeValue();
-        receiverRef.removeValue();
+        //receiverRef.removeValue();
 
         if(isLastMessage){
             if(secondLastMessage!=null){
@@ -265,6 +280,7 @@ public class ChatRepository {
                 DatabaseReference receiverConvoRef = firebaseDatabase.getReference().child("Conversations").child(message.getRecipientId()).child(message.getSenderId());
                 senderConvoRef.removeValue();
                 receiverConvoRef.removeValue();
+
             }
         }
 
@@ -273,7 +289,17 @@ public class ChatRepository {
                     .getInstance()
                     .getReference()
                     .child("media").child(message.getMessageId());
-            storageRef.delete();
+            storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Log.d("File Delete","File Deleted");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("File Delete","File Not Deleted");
+                }
+            });
         }
 
     }
@@ -443,15 +469,21 @@ public class ChatRepository {
         });
     }
 
-    public void setOnlineStatus(String userId,boolean status){
+    public void setOnlineStatus(String userId, boolean status) {
         DatabaseReference userRef = firebaseDatabase.getReference().child("Users").child(userId).child("status");
         if(status){
-            userRef.setValue(true);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    userRef.setValue(status);
+                }
+            },1000);
         }else{
             userRef.removeValue();
         }
 
     }
+
 
     public MutableLiveData<Boolean> isOnline(String userId){
         MutableLiveData<Boolean> isOnlineLiveData = new MutableLiveData<>();
@@ -555,5 +587,25 @@ public class ChatRepository {
         });
         return profilePictureLiveData;
     }
+
+    public LiveData<String> getReceiverDeviceToken(String receiverId){
+        MutableLiveData<String> deviceTokenLiveData = new MutableLiveData<>();
+        DatabaseReference user = firebaseDatabase.getReference().child("Users").child(receiverId).child("userDeviceToken");
+        user.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String deviceToken = snapshot.getValue(String.class);
+                deviceTokenLiveData.setValue(deviceToken);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return deviceTokenLiveData;
+    }
+
+
 
 }

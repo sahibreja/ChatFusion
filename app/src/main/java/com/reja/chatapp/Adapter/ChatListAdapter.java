@@ -1,5 +1,6 @@
 package com.reja.chatapp.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -33,6 +34,12 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Layout
         this.conversationList = conversationList;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateData(List<Conversation> conversationList){
+        this.conversationList = conversationList;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public LayoutHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,37 +50,48 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Layout
 
     @Override
     public void onBindViewHolder(@NonNull LayoutHolder holder, int position) {
+        if(conversationList!=null && !conversationList.isEmpty())
+        {
+            Conversation conversation = conversationList.get(position);
+            
+            String profileImage = conversation.getRecipientProfilePicture();
 
-        Conversation conversation = conversationList.get(position);
-        String profileImage = conversation.getRecipientProfilePicture();
-
-        if (profileImage != null && !profileImage.isEmpty()) {
-            Glide.with(context).load(profileImage).into(holder.profileImg);
-        } else {
-            holder.profileImg.setImageResource(R.drawable.account);
-        }
-
-        if(conversation.getUnreadMessageCount() > 0){
-            holder.unread_msg_view.setVisibility(View.VISIBLE);
-            holder.unread_msg_no.setText(String.valueOf(conversation.getUnreadMessageCount()));
-        }else{
-            holder.unread_msg_view.setVisibility(View.GONE);
-        }
-
-        holder.userName.setText(conversation.getRecipientName());
-        setLastMessage(conversation,holder);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("userId",conversation.getConversationId());
-                context.startActivity(intent);
+            if (profileImage != null && !profileImage.isEmpty()) {
+                Glide.with(context).load(profileImage).into(holder.profileImg);
+            } else {
+                holder.profileImg.setImageResource(R.drawable.account);
             }
-        });
+
+            if(conversation.getUnreadMessageCount() > 0){
+                holder.unread_msg_view.setVisibility(View.VISIBLE);
+                int noOfUnreadMsg = conversation.getUnreadMessageCount();
+                if(noOfUnreadMsg > 99){
+                    holder.unread_msg_no.setText("99+");
+                }else{
+                    holder.unread_msg_no.setText(String.valueOf(noOfUnreadMsg));
+                }
+
+            }else{
+                holder.unread_msg_view.setVisibility(View.GONE);
+            }
+
+            holder.userName.setText(conversation.getRecipientName());
+            setLastMessage(conversation,holder);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, ChatActivity.class);
+                    intent.putExtra("userId",conversation.getConversationId());
+                    context.startActivity(intent);
+                }
+            });
+        }
+
     }
 
-    private void setLastMessage(Conversation conversation,@NonNull LayoutHolder holder){
-        if(conversation.getLastMessage().getMessageType()!=null){
+    @SuppressLint("SetTextI18n")
+    private void setLastMessage(Conversation conversation, @NonNull LayoutHolder holder){
+        if(conversation!=null && conversation.getLastMessage()!=null && conversation.getLastMessage().getMessageType()!=null){
             if(conversation.getLastMessage().getMessageType().equals(MessageType.TEXT)){
                 holder.lastMessage.setText(conversation.getLastMessage().getContent());
             }else if( conversation.getLastMessage().getMessageType().equals(MessageType.IMAGE)){
@@ -83,6 +101,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Layout
 
             }else if(conversation.getLastMessage().getMessageType().equals(MessageType.PDF)){
                  holder.lastMessage.setText("\uD83D\uDCC4 PDF");
+            }else if(conversation.getLastMessage().getMessageType().equals(MessageType.ROOM_REQUEST)){
+                holder.lastMessage.setText("\uD83D\uDC8C INVITATION");
+            }else{
+                holder.lastMessage.setText("Unknown");
             }
         }
 

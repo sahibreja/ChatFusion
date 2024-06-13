@@ -1,4 +1,4 @@
-package com.codewithkael.javawebrtcyoutube.webrtc;
+package com.reja.chatapp.WebRTC;
 
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;

@@ -1,10 +1,11 @@
-package com.codewithkael.javawebrtcyoutube.webrtc;
+package com.reja.chatapp.WebRTC;
+
+
 
 import android.content.Context;
-
-import com.codewithkael.javawebrtcyoutube.utils.DataModel;
-import com.codewithkael.javawebrtcyoutube.utils.DataModelType;
 import com.google.gson.Gson;
+import com.reja.chatapp.Utils.DataModel;
+import com.reja.chatapp.Utils.DataModelType;
 
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
@@ -23,15 +24,13 @@ import org.webrtc.SurfaceTextureHelper;
 import org.webrtc.SurfaceViewRenderer;
 import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class WebRTCClient {
 
     private final Gson gson = new Gson();
-    private final Context context;
-    private final String username;
+    private  Context context;
     private EglBase.Context eglBaseContext= EglBase.create().getEglBaseContext();
     private PeerConnectionFactory peerConnectionFactory;
     private PeerConnection peerConnection;
@@ -47,10 +46,13 @@ public class WebRTCClient {
     private MediaConstraints mediaConstraints = new MediaConstraints();
 
     public Listener listener;
+    private String senderId;
+    private String senderName;
 
-    public WebRTCClient(Context context, PeerConnection.Observer observer, String username) {
+    public WebRTCClient(Context context, PeerConnection.Observer observer, String senderId, String senderName) {
         this.context = context;
-        this.username = username;
+        this.senderId = senderId;
+        this.senderName = senderName;
         initPeerConnectionFactory();
         peerConnectionFactory = createPeerConnectionFactory();
         iceServer.add(PeerConnection.IceServer.builder("turn:a.relay.metered.ca:443?transport=tcp")
@@ -84,10 +86,10 @@ public class WebRTCClient {
 
     //initilizing ui like surface view renderers
 
-    public void initSurfaceViewRendere(SurfaceViewRenderer viewRenderer){
+    private void initSurfaceViewRendere(SurfaceViewRenderer viewRenderer) {
         viewRenderer.setEnableHardwareScaler(true);
         viewRenderer.setMirror(true);
-        viewRenderer.init(eglBaseContext,null);
+        viewRenderer.init(eglBaseContext, null);
     }
 
     public void initLocalSurfaceView(SurfaceViewRenderer view){
@@ -128,7 +130,7 @@ public class WebRTCClient {
         throw new IllegalStateException("front facing camera not found");
     }
 
-    public void initRemoteSurfaceView(SurfaceViewRenderer view){
+    public void initRemoteSurfaceView(SurfaceViewRenderer view) {
         initSurfaceViewRendere(view);
     }
 
@@ -146,7 +148,7 @@ public class WebRTCClient {
                             //its time to transfer this sdp to other peer
                             if (listener!=null){
                                 listener.onTransferDataToOtherPeer(new DataModel(
-                                        target,username,sessionDescription.description, DataModelType.Offer
+                                        senderId,senderName,target,sessionDescription.description, DataModelType.Offer
                                 ));
                             }
                         }
@@ -171,7 +173,7 @@ public class WebRTCClient {
                             //its time to transfer this sdp to other peer
                             if (listener!=null){
                                 listener.onTransferDataToOtherPeer(new DataModel(
-                                        target,username,sessionDescription.description, DataModelType.Answer
+                                        senderId,senderName,target,sessionDescription.description, DataModelType.Answer
                                 ));
                             }
                         }
@@ -182,6 +184,7 @@ public class WebRTCClient {
             e.printStackTrace();
         }
     }
+
 
     public void onRemoteSessionReceived(SessionDescription sessionDescription){
         peerConnection.setRemoteDescription(new MySdpObserver(),sessionDescription);
@@ -195,7 +198,7 @@ public class WebRTCClient {
         addIceCandidate(iceCandidate);
         if (listener!=null){
             listener.onTransferDataToOtherPeer(new DataModel(
-                    target,username,gson.toJson(iceCandidate),DataModelType.IceCandidate
+                    senderId,senderName,target,gson.toJson(iceCandidate),DataModelType.IceCandidate
             ));
         }
     }

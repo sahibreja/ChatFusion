@@ -19,20 +19,37 @@
             android:layout_marginTop="10dp"
             android:paddingHorizontal="15dp">
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/backBtn"
-                android:layout_width="20dp"
-                android:layout_height="16dp"
-                android:src="@drawable/_icon_back_arrow"
-                android:layout_centerVertical="true"/>
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/circle_click">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/_icon_back_arrow"
+                    android:layout_centerInParent="true"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
 
-            <ImageView
+
+            <RelativeLayout
                 android:id="@+id/menuBtn"
-                android:layout_width="20dp"
-                android:layout_height="15dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/__icon__menu_1_"/>
+                android:background="@drawable/circle_click">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/__icon__menu_1_"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+
+
+
 
             <RelativeLayout
                 android:layout_width="155dp"
@@ -64,7 +81,7 @@
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/test_img"
+                android:src="@drawable/account"
                 app:civ_border_width="2dp"
                 app:civ_border_color="@color/black"
                 app:civ_circle_background_color="@color/primary_color"
@@ -74,7 +91,6 @@
             android:id="@+id/userStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Online"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/online_txt_color"/>
     </LinearLayout>
@@ -125,17 +141,25 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:elevation="2dp"
-            android:padding="10dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="7dp"
             android:background="@color/light_gray">
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/attachmentBtn"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
-                android:contentDescription="@string/todo"
-                android:rotation="45"
-                android:src="@drawable/baseline_attach_file_24" />
+                android:background="@drawable/circle_click">
+                <ImageView
+                    android:layout_centerInParent="true"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:contentDescription="@string/todo"
+                    android:rotation="45"
+                    android:src="@drawable/baseline_attach_file_24" />
+            </RelativeLayout>
+
 
             <EditText
                 android:id="@+id/txt_edit_txt"
@@ -143,11 +167,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
                 android:hint="@string/write_a_message"
                 android:maxHeight="60dp"
                 android:maxLines="5"
-                android:minHeight="35dp"
-                android:paddingStart="10dp"
+                android:minHeight="30dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
+                android:textSize="14sp"
                 tools:ignore="RtlSymmetry"
                 android:layout_marginHorizontal="10dp"
                 android:background="@drawable/chat_section_4_bg"/>
@@ -155,24 +182,36 @@
 
 
             <RelativeLayout
-                android:layout_width="34dp"
-                android:layout_height="34dp"
+                android:id="@+id/sendBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/chat_send_btn_bg">
 
                 <ImageView
-                    android:id="@+id/sendBtn"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_centerInParent="true"
                     app:tint="@color/white"
-                    android:src="@drawable/send_svgrepo_com" />
+                    android:scaleType="centerInside"
+                    android:src="@drawable/send_svgrepo_com"
+                    tools:ignore="ContentDescription" />
             </RelativeLayout>
 
 
         </LinearLayout>
 
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/incomingCallLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <include layout="@layout/incoming_call_layout" />
+    </FrameLayout>
+
+
 
 
 </RelativeLayout>

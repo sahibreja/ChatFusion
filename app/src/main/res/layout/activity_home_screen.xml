@@ -8,8 +8,6 @@
     tools:context=".UI.Home.HomeScreenActivity"
     android:background="@color/primary_color">
 
-
-
     <LinearLayout
         android:id="@+id/top_layout"
         android:layout_width="match_parent"
@@ -17,27 +15,39 @@
         android:paddingHorizontal="20dp"
         android:orientation="vertical">
         <RelativeLayout
-            android:layout_marginHorizontal="8dp"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="40dp"
             android:layout_marginTop="20dp">
 
             <TextView
                 android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User Name"
+                android:text="@string/loading"
                 android:textSize="18sp"
                 android:maxLines="1"
-                android:textAppearance="@style/signup_txt_style"/>
+                android:layout_centerVertical="true"
+                android:textAppearance="@style/signup_txt_style"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@id/menu_btn"/>
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/menu_btn"
-                android:layout_width="20dp"
-                android:layout_height="15dp"
-                android:src="@drawable/__icon__menu_1_"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/circle_click">
+
+                <ImageView
+                    android:layout_centerInParent="true"
+                    android:layout_width="20dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/__icon__menu_1_"
+                    />
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -45,7 +55,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:elevation="4dp"
             android:background="@drawable/home_search_bg"
             android:paddingHorizontal="8dp">
@@ -68,6 +78,7 @@
             </RelativeLayout>
 
             <EditText
+                android:id="@+id/search_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
@@ -88,7 +99,7 @@
         android:background="@drawable/chat_list_bg"
         android:layout_height="match_parent"
         android:layout_below="@id/top_layout"
-        android:paddingTop="15dp"
+        android:paddingTop="10dp"
         tools:listitem="@layout/chat_list_item_layout"
         android:layout_marginHorizontal="10dp"
         android:scrollbars="vertical"/>
@@ -131,29 +142,33 @@
         android:focusable="true">
 
         <ImageView
+            android:id="@+id/movieBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/home_bootom_nav_item_bg"
             android:layout_marginEnd="7dp"
-            android:src="@drawable/__icon__call_"
+            android:src="@drawable/movie_icon"
+            app:tint="@color/white"
             android:scaleType="center"/>
-
-        <ImageView
-            android:id="@+id/cameraBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/home_bootom_nav_item_bg"
-            android:layout_marginHorizontal="7dp"
-            android:src="@drawable/__icon__camera_"
-            android:scaleType="center" />
         <ImageView
             android:id="@+id/addFriendBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/home_bootom_nav_item_bg"
-            android:layout_marginStart="7dp"
+
+            android:layout_marginHorizontal="7dp"
             android:src="@drawable/icon_add_friend"
             android:scaleType="center"/>
+
+        <ImageView
+            android:id="@+id/profileBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/home_bootom_nav_item_bg"
+            android:layout_marginStart="7dp"
+            android:src="@drawable/baseline_account_circle_24"
+            android:scaleType="center"/>
+
 
     </LinearLayout>
     
