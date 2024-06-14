@@ -15,18 +15,39 @@
         android:layout_height="?actionBarSize"
         android:paddingHorizontal="15dp">
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="16dp"
-            android:src="@drawable/_icon_back_arrow"
-            android:layout_centerVertical="true"/>
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+        <RelativeLayout
+            android:id="@+id/backBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
+            android:background="@drawable/circle_click">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="16dp"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/_icon_back_arrow" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/logoutBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/logout_icon"/>
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_click">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/logout_icon"
+                />
+
+        </RelativeLayout>
+
+
     </RelativeLayout>
 
     <ScrollView
@@ -46,9 +67,10 @@
                 android:layout_height="150dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profilePicture"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:src="@drawable/sahib_reja"
+                    android:src="@drawable/account"
                     app:civ_border_width="1.2dp"
                     app:civ_border_color="@color/black"
                     android:layout_centerInParent="true"/>
@@ -62,6 +84,7 @@
                     android:background="@drawable/edit_circle_bg">
 
                     <ImageView
+                        android:id="@+id/profileImageEditBtn"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/edit_icon"
@@ -79,7 +102,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/inter_medium"
-                android:text="Sahib Reja"
+                android:layout_marginHorizontal="20dp"
+                android:text="@string/loading"
                 android:textSize="28sp"
                 android:textColor="@color/black"/>
 
@@ -114,22 +138,26 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/user_icon"/>
+                        android:src="@drawable/user_icon"
+                        android:layout_gravity="start"/>
 
                     <TextView
+                        android:id="@+id/userNameTxt"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="Sahib reja"
+                        android:maxLines="1"
                         android:layout_marginStart="10dp"
                         android:fontFamily="sans-serif"
                         android:textColor="@color/black"
                         android:layout_marginEnd="10dp"/>
 
                     <ImageView
+                        android:id="@+id/nameEditBtn"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/edit_icon"/>
+                        android:src="@drawable/edit_icon"
+                        android:layout_gravity="center_vertical"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -165,22 +193,26 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/user_info_icon"/>
+                        android:src="@drawable/user_info_icon"
+                        android:layout_gravity="start"/>
 
                     <TextView
+                        android:id="@+id/aboutMeTxt"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="Love the cuteness"
                         android:layout_marginStart="10dp"
+                        android:maxLines="5"
                         android:fontFamily="sans-serif"
                         android:textColor="@color/black"
                         android:layout_marginEnd="10dp"/>
 
                     <ImageView
+                        android:id="@+id/aboutMeEditBtn"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/edit_icon"/>
+                        android:src="@drawable/edit_icon"
+                        android:layout_gravity="center_vertical"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -216,22 +248,20 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/baseline_email_24"/>
+                        android:src="@drawable/baseline_email_24"
+                        app:tint="@color/black"/>
 
                     <TextView
+                        android:id="@+id/emailTxt"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="reja@gmail.com"
+                        android:maxLines="1"
                         android:layout_marginStart="10dp"
                         android:fontFamily="sans-serif"
                         android:textColor="@color/black"
                         android:layout_marginEnd="10dp"/>
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/edit_icon"/>
 
                 </LinearLayout>
             </LinearLayout>

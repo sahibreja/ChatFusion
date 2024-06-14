@@ -1,6 +1,7 @@
 package com.reja.chatapp.Repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -19,14 +20,21 @@ import com.reja.chatapp.Interface.CallBack.FriendRequestReceivedCallback;
 import com.reja.chatapp.Interface.CallBack.FriendRequestSentCallBack;
 import com.reja.chatapp.Model.Friend;
 import com.reja.chatapp.Model.FriendRequest;
+import com.reja.chatapp.Model.MutualFriend;
+import com.reja.chatapp.Model.ProfileDetails;
 import com.reja.chatapp.Model.SearchResult;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class AddFriendRepository {
     private Application application;
@@ -48,17 +56,17 @@ public class AddFriendRepository {
 
     }
 
+
+
     public MutableLiveData<List<SearchResult>> getFriendsData(){
         return friendMutableLiveData;
     }
-
     public MutableLiveData<List<SearchResult>> getSearchResultData(){
         return friendMutableLiveData;
     }
     public MutableLiveData<Boolean> getUserActionLiveData(){
         return userActionLiveData;
     }
-
     public void performSearch(String query) {
         DatabaseReference userRef = firebaseDatabase.getReference().child("Users");
         Query query1 = userRef.orderByChild("lowerCaseUserName").startAt(query).endAt(query + "\uf8ff");
@@ -79,6 +87,7 @@ public class AddFriendRepository {
                         sr.setUserId(searchUserId);
                         sr.setUserName(dataSnapshot.child("userName").getValue(String.class));
                         sr.setUserProfileImage(dataSnapshot.child("userProfilePicture").getValue(String.class));
+                        sr.setUserBio(dataSnapshot.child("userBio").getValue(String.class));
 
                         // Check if this user is present in my friend list
                         CompletableFuture<Void> friendCheckFuture = new CompletableFuture<>();
@@ -132,7 +141,6 @@ public class AddFriendRepository {
 
         futureList.thenAccept(searchResults -> friendMutableLiveData.setValue(searchResults));
     }
-
     private void checkIReceived(String searchUserId, final FriendRequestReceivedCallback callback) {
         DatabaseReference userFriendRef = firebaseDatabase.getReference("Users").child(userId).child("FriendRequest").child("Receive").child(searchUserId);
         userFriendRef.addValueEventListener(new ValueEventListener() {
@@ -140,11 +148,13 @@ public class AddFriendRepository {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean isIReceived = snapshot.exists();
                 callback.onIReceivedCheckCompleted(isIReceived);
+                userActionLiveData.setValue(isIReceived);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 callback.onIReceivedCheckCompleted(false);
+                userActionLiveData.setValue(false);
             }
         });
 
@@ -156,11 +166,13 @@ public class AddFriendRepository {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean isISent = snapshot.exists();
                 callBack.onIRequestCheckCompleted(isISent);
+                userActionLiveData.setValue(isISent);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 callBack.onIRequestCheckCompleted(false);
+                userActionLiveData.setValue(false);
             }
         });
     }
@@ -171,11 +183,13 @@ public class AddFriendRepository {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean isFriend = snapshot.exists();
                 callback.onFriendCheckCompleted(isFriend);
+                userActionLiveData.setValue(isFriend);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 callback.onFriendCheckCompleted(false);
+                userActionLiveData.setValue(false);
             }
         });
     }
@@ -186,7 +200,7 @@ public class AddFriendRepository {
         CompletableFuture<List<SearchResult>> futureList = new CompletableFuture<>();
         List<CompletableFuture<Void>> futures = new ArrayList<>();
 
-        friendsRef.addValueEventListener(new ValueEventListener() {
+        friendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<SearchResult> searchResults = new ArrayList<>();
@@ -205,6 +219,7 @@ public class AddFriendRepository {
                                 sr.setUserId(id);
                                 sr.setUserName(userSnapshot.child("userName").getValue(String.class));
                                 sr.setUserProfileImage(userSnapshot.child("userProfilePicture").getValue(String.class));
+                                sr.setUserBio(dataSnapshot.child("userBio").getValue(String.class));
                                 searchResults.add(sr);
                                 future.complete(null);
                             }
@@ -245,6 +260,7 @@ public class AddFriendRepository {
                         sr.setUserId(searchUserId);
                         sr.setUserName(dataSnapshot.child("userName").getValue(String.class));
                         sr.setUserProfileImage(dataSnapshot.child("userProfilePicture").getValue(String.class));
+                        sr.setUserBio(dataSnapshot.child("userBio").getValue(String.class));
 
                         // Check if this user is present in my friend list
                         CompletableFuture<Void> friendCheckFuture = new CompletableFuture<>();
@@ -286,7 +302,6 @@ public class AddFriendRepository {
                 // After iterating through all results, update the LiveData
                 CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
                 allFutures.thenAccept(ignore -> {
-                    Collections.shuffle(searchResultList);
                     futureList.complete(searchResultList);
                 });
             }
@@ -374,7 +389,6 @@ public class AddFriendRepository {
             }
         });
     }
-
     public void rejectFriendRequest(FriendRequest friendRequest){
         DatabaseReference receiverRef = firebaseDatabase.getReference().child("Users").child(friendRequest.getSenderId()).child("FriendRequest").child("Receive");
         DatabaseReference senderRef = firebaseDatabase.getReference().child("Users").child(friendRequest.getReceiverId()).child("FriendRequest").child("Sent");
@@ -421,6 +435,417 @@ public class AddFriendRepository {
             }
         });
     }
+    public MutableLiveData<ProfileDetails> getProfileDetails(String userId, String receiverId){
+        DatabaseReference receiverRef = firebaseDatabase
+                .getReference()
+                .child("Users")
+                .child(receiverId);
+        MutableLiveData<ProfileDetails> profileDetailsMutableLiveData = new MutableLiveData<>();
 
+        receiverRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ProfileDetails profileDetails = new ProfileDetails();
+                String userName = snapshot.child("userName").getValue(String.class);
+                String userProfilePicture = snapshot.child("userProfilePicture").getValue(String.class);
+                String userBio = snapshot.child("userBio").getValue(String.class);
+                profileDetails.setUserName(userName);
+                profileDetails.setUserProfilePicture(userProfilePicture);
+                profileDetails.setUserBio(userBio);
 
+                // Check if this user is present in my friend list
+                checkIsFriend(receiverId, new FriendCheckCallBack() {
+                    @Override
+                    public void onFriendCheckCompleted(boolean isFriend) {
+                        profileDetails.setFriend(isFriend);
+
+                        // Check if I have sent request to this user
+                        checkISent(receiverId, new FriendRequestSentCallBack() {
+                            @Override
+                            public void onIRequestCheckCompleted(boolean isISent) {
+                                profileDetails.setIsent(isISent);
+
+                                // Check if I have received request from that user
+                                checkIReceived(receiverId, new FriendRequestReceivedCallback() {
+                                    @Override
+                                    public void onIReceivedCheckCompleted(boolean isIReceived) {
+                                        profileDetails.setIReceived(isIReceived);
+                                        // Update the LiveData after all checks
+                                        profileDetailsMutableLiveData.postValue(profileDetails);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error if necessary
+            }
+        });
+
+        return profileDetailsMutableLiveData;
+    }
+    public MutableLiveData<List<MutualFriend>> getMutualFriends(String userId, String receiverId) {
+        MutableLiveData<List<MutualFriend>> mutualFriendsLiveData = new MutableLiveData<>();
+
+        DatabaseReference userFriendsRef = firebaseDatabase
+                .getReference()
+                .child("Users")
+                .child(userId)
+                .child("Friends");
+
+        DatabaseReference receiverFriendsRef = firebaseDatabase
+                .getReference()
+                .child("Users")
+                .child(receiverId)
+                .child("Friends");
+
+        userFriendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot userFriendsSnapshot) {
+                List<String> userFriends = new ArrayList<>();
+                for (DataSnapshot snapshot : userFriendsSnapshot.getChildren()) {
+                    String friendId = snapshot.getKey();
+                    userFriends.add(friendId);
+                }
+
+                receiverFriendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot receiverFriendsSnapshot) {
+                        List<String> receiverFriends = new ArrayList<>();
+                        for (DataSnapshot snapshot : receiverFriendsSnapshot.getChildren()) {
+                            String friendId = snapshot.getKey();
+                            receiverFriends.add(friendId);
+                        }
+
+                        List<String> mutualFriendIds = new ArrayList<>(userFriends);
+                        mutualFriendIds.retainAll(receiverFriends);
+
+                        fetchMutualFriendsDetails(mutualFriendIds, mutualFriendsLiveData);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Handle error if necessary
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error if necessary
+            }
+        });
+
+        return mutualFriendsLiveData;
+    }
+    private void fetchMutualFriendsDetails(List<String> mutualFriendIds, MutableLiveData<List<MutualFriend>> mutualFriendsLiveData) {
+        List<MutualFriend> mutualFriends = new ArrayList<>();
+        DatabaseReference usersRef = firebaseDatabase.getReference().child("Users");
+
+        for (String friendId : mutualFriendIds) {
+            usersRef.child(friendId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String name = snapshot.child("userName").getValue(String.class);
+                    String profilePicture = snapshot.child("userProfilePicture").getValue(String.class);
+
+                    MutualFriend mutualFriend = new MutualFriend(friendId, name, profilePicture);
+                    mutualFriends.add(mutualFriend);
+
+                    if (mutualFriends.size() == mutualFriendIds.size()) {
+                        mutualFriendsLiveData.postValue(mutualFriends);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle error if necessary
+                }
+            });
+        }
+    }
+    public MutableLiveData<List<SearchResult>> getReceiveRequestList() {
+        MutableLiveData<List<SearchResult>> listMutableLiveData = new MutableLiveData<>();
+        DatabaseReference requestRef = firebaseDatabase
+                .getReference()
+                .child("Users")
+                .child(userId)
+                .child("FriendRequest")
+                .child("Receive");
+
+        CompletableFuture<List<SearchResult>> futureList = new CompletableFuture<>();
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        requestRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<SearchResult> searchResults = new ArrayList<>();
+                futures.clear(); // Ensure the futures list is cleared each time
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    SearchResult sr = new SearchResult();
+                    sr.setUserId(dataSnapshot.getKey());
+
+                    CompletableFuture<Void> friendCheckFuture = new CompletableFuture<>();
+                    checkIsFriend(sr.getUserId(), new FriendCheckCallBack() {
+                        @Override
+                        public void onFriendCheckCompleted(boolean isFriend) {
+                            sr.setFriend(isFriend);
+                            friendCheckFuture.complete(null);
+                        }
+                    });
+                    futures.add(friendCheckFuture);
+
+                    CompletableFuture<Void> requestSentFuture = new CompletableFuture<>();
+                    checkISent(sr.getUserId(), new FriendRequestSentCallBack() {
+                        @Override
+                        public void onIRequestCheckCompleted(boolean isISent) {
+                            sr.setIRequested(isISent);
+                            requestSentFuture.complete(null);
+                        }
+                    });
+                    futures.add(requestSentFuture);
+
+                    CompletableFuture<Void> requestReceivedFuture = new CompletableFuture<>();
+                    checkIReceived(sr.getUserId(), new FriendRequestReceivedCallback() {
+                        @Override
+                        public void onIReceivedCheckCompleted(boolean isIReceived) {
+                            sr.setIReceived(isIReceived);
+                            requestReceivedFuture.complete(null);
+                        }
+                    });
+                    futures.add(requestReceivedFuture);
+
+                    searchResults.add(sr);
+                }
+
+                CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+                allFutures.thenAccept(ignore -> {
+                    futureList.complete(searchResults);
+                    getUserDetails(searchResults, listMutableLiveData);
+                }).exceptionally(ex -> {
+                    // Log any exceptions
+                    Log.e("getReceiveRequestList", "Error completing all futures", ex);
+                    return null;
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                futureList.completeExceptionally(error.toException());
+            }
+        });
+
+        futureList.thenAccept(listMutableLiveData::postValue).exceptionally(ex -> {
+            // Log any exceptions
+            Log.e("getReceiveRequestList", "Error posting LiveData", ex);
+            return null;
+        });
+
+        return listMutableLiveData;
+    }
+    public MutableLiveData<List<SearchResult>> getSentRequestList() {
+        MutableLiveData<List<SearchResult>> listMutableLiveData = new MutableLiveData<>();
+        DatabaseReference requestRef = firebaseDatabase
+                .getReference()
+                .child("Users")
+                .child(userId)
+                .child("FriendRequest")
+                .child("Sent");
+
+        CompletableFuture<List<SearchResult>> futureList = new CompletableFuture<>();
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        requestRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<SearchResult> searchResults = new ArrayList<>();
+                futures.clear(); // Ensure the futures list is cleared each time
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    SearchResult sr = new SearchResult();
+                    sr.setUserId(dataSnapshot.getKey());
+
+                    CompletableFuture<Void> friendCheckFuture = new CompletableFuture<>();
+                    checkIsFriend(sr.getUserId(), new FriendCheckCallBack() {
+                        @Override
+                        public void onFriendCheckCompleted(boolean isFriend) {
+                            sr.setFriend(isFriend);
+                            friendCheckFuture.complete(null);
+                        }
+                    });
+                    futures.add(friendCheckFuture);
+
+                    CompletableFuture<Void> requestSentFuture = new CompletableFuture<>();
+                    checkISent(sr.getUserId(), new FriendRequestSentCallBack() {
+                        @Override
+                        public void onIRequestCheckCompleted(boolean isISent) {
+                            sr.setIRequested(isISent);
+                            requestSentFuture.complete(null);
+                        }
+                    });
+                    futures.add(requestSentFuture);
+
+                    CompletableFuture<Void> requestReceivedFuture = new CompletableFuture<>();
+                    checkIReceived(sr.getUserId(), new FriendRequestReceivedCallback() {
+                        @Override
+                        public void onIReceivedCheckCompleted(boolean isIReceived) {
+                            sr.setIReceived(isIReceived);
+                            requestReceivedFuture.complete(null);
+                        }
+                    });
+                    futures.add(requestReceivedFuture);
+
+                    searchResults.add(sr);
+                }
+
+                CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+                allFutures.thenAccept(ignore -> {
+                    futureList.complete(searchResults);
+                    getUserDetails(searchResults, listMutableLiveData);
+                }).exceptionally(ex -> {
+                    // Log any exceptions
+                    Log.e("getSentRequestList", "Error completing all futures", ex);
+                    return null;
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                futureList.completeExceptionally(error.toException());
+            }
+        });
+
+        futureList.thenAccept(listMutableLiveData::postValue).exceptionally(ex -> {
+            // Log any exceptions
+            Log.e("getSentRequestList", "Error posting LiveData", ex);
+            return null;
+        });
+
+        return listMutableLiveData;
+    }
+    public MutableLiveData<List<SearchResult>> getRandomNonFriendUsers(int count) {
+        MutableLiveData<List<SearchResult>> listMutableLiveData = new MutableLiveData<>();
+        DatabaseReference userRef = firebaseDatabase.getReference().child("Users");
+
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<SearchResult> searchResultList = new ArrayList<>();
+                AtomicInteger counter = new AtomicInteger((int) snapshot.getChildrenCount());
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String receiverId = dataSnapshot.getKey();
+                    if (receiverId != null) {
+                        if(!receiverId.equals(userId)) {
+                            String userName = dataSnapshot.child("userName").getValue(String.class);
+                            String userProfilePicture = dataSnapshot.child("userProfilePicture").getValue(String.class);
+                            String userBio = dataSnapshot.child("userBio").getValue(String.class);
+                            checkIsFriend(receiverId, isFriend -> {
+                                if (!isFriend) {
+                                    checkISent(receiverId, isISent -> {
+                                        if (!isISent) {
+                                            checkIReceived(receiverId, isIReceived -> {
+                                                if (!isIReceived) {
+                                                    SearchResult sr = new SearchResult();
+                                                    sr.setUserId(receiverId);
+                                                    sr.setFriend(false);
+                                                    sr.setIRequested(false);
+                                                    sr.setIReceived(false);
+                                                    sr.setUserName(userName);
+                                                    sr.setUserProfileImage(userProfilePicture);
+                                                    sr.setUserBio(userBio);
+                                                    searchResultList.add(sr);
+                                                }
+                                                if (counter.decrementAndGet() == 0) {
+                                                    listMutableLiveData.setValue(searchResultList);
+                                                }
+                                            });
+                                        } else if (counter.decrementAndGet() == 0) {
+                                            listMutableLiveData.setValue(searchResultList);
+                                        }
+                                    });
+                                } else if (counter.decrementAndGet() == 0) {
+                                    listMutableLiveData.setValue(searchResultList);
+                                }
+                            });
+                        }else if (counter.decrementAndGet() == 0) {
+                            listMutableLiveData.setValue(searchResultList);
+                        }
+                    }
+                }
+
+                // In case the initial snapshot is empty, we need to post an empty list
+                if (snapshot.getChildrenCount() == 0) {
+                    listMutableLiveData.setValue(searchResultList);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("getRandomNonFriendUsers", "Error fetching users", error.toException());
+            }
+        });
+
+        return listMutableLiveData;
+    }
+    private void getUserDetails(List<SearchResult> searchResultList, MutableLiveData<List<SearchResult>> searchResultsLiveData) {
+        DatabaseReference userRef = firebaseDatabase.getReference().child("Users");
+        AtomicInteger counter = new AtomicInteger(searchResultList.size());
+
+        for (SearchResult sr : searchResultList) {
+            userRef.child(sr.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String userName = snapshot.child("userName").getValue(String.class);
+                    String userProfilePicture = snapshot.child("userProfilePicture").getValue(String.class);
+                    String userBio = snapshot.child("userBio").getValue(String.class);
+                    sr.setUserName(userName);
+                    sr.setUserProfileImage(userProfilePicture);
+                    sr.setUserBio(userBio);
+                    if (counter.decrementAndGet() == 0) {
+                        searchResultsLiveData.postValue(searchResultList);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("getUserDetails", "Error fetching user details for userId: " + sr.getUserId(), error.toException());
+                }
+            });
+        }
+
+        if (searchResultList.isEmpty()) {
+            searchResultsLiveData.postValue(searchResultList);
+        }
+    }
+    public MutableLiveData<Boolean> isSomeoneRequested(){
+        MutableLiveData<Boolean> isMutableLiveData = new MutableLiveData<>();
+        DatabaseReference userRef = firebaseDatabase.getReference().
+                child("Users").
+                child(userId).
+                child("FriendRequest")
+                .child("Receive");
+
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.getChildrenCount() > 0){
+                    isMutableLiveData.setValue(true);
+                }else{
+                    isMutableLiveData.setValue(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                isMutableLiveData.setValue(false);
+            }
+        });
+        return isMutableLiveData;
+    }
 }

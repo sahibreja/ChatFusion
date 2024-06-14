@@ -69,7 +69,7 @@
 
     </style>
 
-    <style name="popupBgStyle" parent="Widget.Material3.PopupMenu">
+    <style name="popupBgStyle" parent="Widget.Material3.PopupMenu.ContextMenu">
         <item name="android:popupBackground">@drawable/popup_menu_bg</item>
         <item name="android:overlapAnchor">false</item>
     </style>

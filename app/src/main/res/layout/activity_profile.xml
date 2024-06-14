@@ -15,18 +15,35 @@
         android:layout_height="?actionBarSize"
         android:paddingHorizontal="15dp">
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="16dp"
-            android:src="@drawable/_icon_back_arrow"
-            android:layout_centerVertical="true"/>
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+        <RelativeLayout
+            android:id="@+id/backBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
+            android:background="@drawable/circle_click">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="16dp"
+                android:src="@drawable/_icon_back_arrow"
+                android:contentDescription="@string/todo"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/menu_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/menu_vertical"/>
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_click">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/menu_vertical"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/todo"
+                />
+        </RelativeLayout>
     </RelativeLayout>
 
     <ScrollView
@@ -41,11 +58,13 @@
             android:gravity="center_horizontal">
             
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profileImage"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:src="@drawable/sahib_reja"
+                android:src="@drawable/account"
                 app:civ_border_width="1.2dp"
-                app:civ_border_color="@color/black"/>
+                app:civ_border_color="@color/black"
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/userName"
@@ -53,89 +72,148 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/inter_medium"
-                android:text="Sahib Reja"
+                android:text="Loading..."
                 android:textSize="28sp"
                 android:textColor="@color/black"/>
 
             <TextView
+                android:id="@+id/userBio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Love the cuteness"
                 android:textSize="14sp"
-                android:fontFamily="sans-serif"/>
+                android:fontFamily="sans-serif" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="25dp"
-                android:layout_marginTop="25dp"
-                android:paddingVertical="10dp"
-                android:paddingHorizontal="17dp"
-                android:background="@drawable/profile_section_2"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/notification_icon"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                android:layout_marginTop="15dp">
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/isFriendLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/mute_notification"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="sans-serif"
-                    android:textColor="@color/black"
-                    android:layout_marginEnd="10dp"/>
-                
-                <Switch
-                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    tools:ignore="UselessParent">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:paddingVertical="10dp"
+                        android:paddingHorizontal="17dp"
+                        android:background="@drawable/profile_section_2"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/notification_icon"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mute_notification"
+                            android:layout_marginStart="10dp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"
+                            android:layout_marginEnd="10dp"/>
+
+                        <Switch
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:ignore="UseSwitchCompatOrMaterialXml"
+                            android:track="@drawable/switch_track_bg"
+                            android:thumb="@drawable/switch_thumb"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="15dp"
+                        android:paddingVertical="10dp"
+                        android:paddingHorizontal="17dp"
+                        android:background="@drawable/profile_section_2"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/music"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/custom_notification"
+                            android:layout_marginStart="10dp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"
+                            android:layout_marginEnd="10dp"/>
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/audio_file"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/requestLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:ignore="UseSwitchCompatOrMaterialXml"
-                    android:track="@drawable/switch_track_bg"
-                    android:thumb="@drawable/switch_thumb"/>
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="30dp"
+                    android:padding="10dp"
+                    android:weightSum="2"
+                    android:visibility="gone">
 
-            </LinearLayout>
+                    <android.widget.Button
+                        android:id="@+id/acceptBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:text="@string/accept"
+                        android:layout_weight="1"
+                        android:background="@drawable/accept_btn_bg"
+                        android:textColor="@color/white"
+                        android:layout_marginEnd="10dp"
+                        android:textAllCaps="false"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="25dp"
-                android:layout_marginTop="15dp"
-                android:paddingVertical="10dp"
-                android:paddingHorizontal="17dp"
-                android:background="@drawable/profile_section_2"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                    <android.widget.Button
+                        android:id="@+id/rejectBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/reject"
+                        android:background="@drawable/reject_btn_bg"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:textAllCaps="false"/>
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/music"/>
+                </LinearLayout>
+                <android.widget.Button
+                    android:id="@+id/addFriendBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="@string/add_friend"
+                    android:textColor="@color/white"
+                    android:textAllCaps="false"
+                    android:background="@drawable/add_friend_btn_bg"
+                    android:layout_marginHorizontal="30dp"
+                    android:visibility="gone"/>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/custom_notification"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="sans-serif"
-                    android:textColor="@color/black"
-                    android:layout_marginEnd="10dp"/>
+            </RelativeLayout>
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/audio_file"/>
 
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="25dp"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="15dp"
                 android:paddingVertical="10dp"
                 android:paddingHorizontal="17dp"
@@ -152,9 +230,11 @@
                     android:textColor="@color/black"/>
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    tools:listitem="@layout/mutual_friend_item"/>
 
 
 

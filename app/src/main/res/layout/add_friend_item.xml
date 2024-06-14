@@ -18,7 +18,7 @@
             android:id="@+id/profileImg"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/sahib_reja"
+            android:src="@drawable/account"
             android:layout_gravity="start"
             android:scaleType="centerCrop"/>
         <LinearLayout
@@ -33,7 +33,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/itim"
-                android:text="Sahib Reja"
                 android:textColor="@color/black"
                 android:maxLines="1"
                 android:textSize="24sp" />
@@ -42,7 +41,6 @@
                 android:id="@+id/bio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Everything is Possible in love"
                 android:maxLines="1"
                 android:textSize="15sp"
                 android:fontFamily="@font/carme"
@@ -53,7 +51,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add Friend"
+                android:text="@string/add_friend"
                 android:textColor="@android:color/holo_blue_dark"/>
 
             <LinearLayout
@@ -69,7 +67,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Accept"
+                    android:text="@string/accept"
                     android:layout_weight="1"
                     android:textColor="@android:color/holo_green_dark"
                     android:layout_marginRight="10dp"/>

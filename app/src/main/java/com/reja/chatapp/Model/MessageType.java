@@ -8,5 +8,6 @@ public enum MessageType {
     PDF,
     GIF,
     EMOJI,
-    CONTACT
+    CONTACT,
+    ROOM_REQUEST
 }

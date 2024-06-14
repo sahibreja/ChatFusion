@@ -59,4 +59,20 @@ public class AddFriendViewModel extends AndroidViewModel {
     public MutableLiveData<Boolean> getUserActionLiveData(){
         return addFriendRepository.getUserActionLiveData();
     }
+
+    public MutableLiveData<List<SearchResult>> getReceiveRequestList(){
+        return addFriendRepository.getReceiveRequestList();
+    }
+
+    public MutableLiveData<List<SearchResult>> getSentRequestList(){
+        return addFriendRepository.getSentRequestList();
+    }
+
+    public MutableLiveData<Boolean> isSomeoneRequested(){
+        return addFriendRepository.isSomeoneRequested();
+    }
+
+    public MutableLiveData<List<SearchResult>> getRandomNonFriendUsers(int count){
+        return addFriendRepository.getRandomNonFriendUsers(count);
+    }
 }

@@ -1,5 +1,6 @@
 package com.reja.chatapp.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.reja.chatapp.Model.FriendRequest;
 import com.reja.chatapp.Model.SearchResult;
 import com.reja.chatapp.R;
 import com.reja.chatapp.UI.Chat.ChatActivity;
+import com.reja.chatapp.UI.Chat.ProfileActivity;
 
 import java.util.List;
 import java.util.Objects;
@@ -46,6 +48,12 @@ public class ShowFriendAndSearchAdapter extends RecyclerView.Adapter<ShowFriendA
         this.context = context;
         this.resultList = resultList;
         auth = FirebaseAuth.getInstance();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateData(List<SearchResult> searchResultList){
+        this.resultList = searchResultList;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -130,7 +138,9 @@ public class ShowFriendAndSearchAdapter extends RecyclerView.Adapter<ShowFriendA
         holder.profileImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "Profile Image", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("userId",result.getUserId());
+                context.startActivity(intent);
             }
         });
 
