@@ -12,7 +12,7 @@ ChatFusion is a feature-rich chatting application that allows users to chat, sen
 
 ## Technologies Used
 
-- **Frontend:** Android Studio
+- **Frontend:** Java and XML
 - **Backend:** Firebase
 - **Video Calls:** WebRTC
 
