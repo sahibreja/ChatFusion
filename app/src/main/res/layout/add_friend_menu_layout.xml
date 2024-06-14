@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        tools:ignore="UselessParent">
+
+        <View
+            android:layout_width="42.43dp"
+            android:layout_height="42.43dp"
+            android:background="@color/white"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="19dp"
+            android:layout_marginTop="8dp"
+            android:rotation="45"
+            android:elevation="4dp" />
+
+        <LinearLayout
+            android:layout_alignParentEnd="true"
+            android:elevation="4dp"
+            android:background="@drawable/popup_menu_bg"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="10dp">
+
+
+            <android.widget.Button
+                android:id="@+id/addRandom"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/add_random"
+                android:textAllCaps="false"
+                android:drawableStart="@drawable/baseline_person_add_24"
+                android:background="@drawable/add_friend_btn_bg"
+                android:paddingHorizontal="15dp"/>
+
+            <android.widget.Button
+                android:id="@+id/sent_requests"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/sent_requests"
+                android:textAllCaps="false"
+                android:drawableStart="@drawable/baseline_schedule_send_24"
+                android:background="@drawable/add_friend_btn_bg"
+                android:paddingHorizontal="15dp"
+                android:layout_marginVertical="10dp"/>
+            <android.widget.Button
+                android:id="@+id/received_requests"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/received_requests"
+                android:textAllCaps="false"
+                android:textAlignment="center"
+                android:drawableStart="@drawable/receive_request_icon"
+                android:background="@drawable/add_friend_btn_bg"
+                android:paddingHorizontal="15dp"
+                android:drawablePadding="10dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

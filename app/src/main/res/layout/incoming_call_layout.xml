@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@drawable/curve_background"
+        android:backgroundTint="@android:color/secondary_text_light"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userProfilePicture"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/account"/>
+
+        <LinearLayout
+            android:layout_marginStart="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sahib Reja"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/itim"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Calling you"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/carme"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/accept_call_btn"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:src="@drawable/btn_startcall_normal"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/reject_call_btn"
+            android:layout_marginStart="30dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:src="@drawable/btn_endcall_normal"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+
+</FrameLayout>

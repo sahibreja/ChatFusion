@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.Home.AddFriend.SentRequestFragment"
+    android:background="@color/primary_color">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="10dp"
+        tools:listitem="@layout/add_friend_item"
+        android:layout_marginHorizontal="10dp"
+        android:scrollbars="vertical"/>
+
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/noResultLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:paddingTop="10dp">
+        <include layout="@layout/no_result_found_layout"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:paddingTop="10dp">
+        <include layout="@layout/loading_layout"/>
+    </FrameLayout>
+
+</FrameLayout>
